@@ -1,4 +1,4 @@
-class Vector {
+export class Vector {
     constructor(x, y) {
         this.x = x;
         this.y = y;
@@ -31,7 +31,6 @@ class Vector {
         }
         return this;
     }
-
     get magnitude() {
         return Math.sqrt(this.x * this.x + this.y * this.y);
     }
@@ -49,5 +48,8 @@ class Vector {
         let x = magnitude * Math.cos(angle);
         let y = magnitude * Math.sin(angle);
         return new Vector(x, y);
+    }
+    static get Z() {
+        return new Vector(0, 0);
     }
 }

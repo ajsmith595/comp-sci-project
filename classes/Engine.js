@@ -1,5 +1,6 @@
 import constants from './constants.js';
-
+import { Vector } from './Vector.js';
+import { Enemy } from './Enemy.js';
 export class Engine {
     constructor() {
         let canvas = document.createElement('CANVAS'); // Create the canvas
@@ -16,25 +17,29 @@ export class Engine {
         this.ctx = ctx;
 
         this.render = this.render.bind(this);
-
+        this.update = this.update.bind(this);
 
         requestAnimationFrame(this.render);
+
+        setInterval(this.update, 1 / 100);
 
         this.towers = [];
         this.enemies = [];
         this.projectiles = [];
         this.shields = [];
+        this.previousTime = performance.now();
+
+        let enemy = new Enemy();
+        enemy.velocity = new Vector(10, 10);
+        this.enemies.push(enemy);
+
 
         this.money = 0;
         this.lives = 100;
     }
-    /**
-     * 
-     * 
-     * 
-     */
     render() {
         let ctx = this.ctx;
+
         ctx.fillStyle = "#000";
         ctx.fillRect(0, 0, constants.width, constants.height);
 
@@ -60,9 +65,17 @@ export class Engine {
                 }
             }
         }
+
+        for (let enemy of this.enemies) {
+            enemy.render(ctx);
+        }
     }
     update() {
+        let timeNow = performance.now();
+        let deltaTime = (timeNow - this.previousTime) / 1000;
 
+
+        this.previousTime = timeNow;
     }
     mousePressed(e) {
 
