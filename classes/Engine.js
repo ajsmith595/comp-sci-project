@@ -13,14 +13,17 @@ export class Engine {
         this.canvas = canvas;
 
         let ctx = canvas.getContext('2d');
-
         this.ctx = ctx;
+
+        let mapCanvas = new OffscreenCanvas(constants.width, constants.height);
+        this.mapCanvas = mapCanvas;
+        this.mapCtx = mapCanvas.getContext('2d');
+
+        this.renderMap();
 
         this.render = this.render.bind(this);
         this.update = this.update.bind(this);
-
         requestAnimationFrame(this.render);
-
         setInterval(this.update, 1 / 100);
 
         this.towers = [];
@@ -39,7 +42,33 @@ export class Engine {
     }
     render() {
         let ctx = this.ctx;
+        ctx.drawImage(this.mapCanvas, 0, 0);
 
+        for (let enemy of this.enemies) {
+            enemy.render(ctx);
+        }
+
+        requestAnimationFrame(this.render);
+    }
+    update() {
+        let timeNow = performance.now();
+        let deltaTime = (timeNow - this.previousTime) / 1000;
+
+        for (let enemy of this.enemies) {
+            enemy.update(deltaTime);
+        }
+
+        this.previousTime = timeNow;
+    }
+    mousePressed(e) {
+
+    }
+    keyPressed(e) {
+
+    }
+
+    renderMap() {
+        let ctx = this.mapCtx;
         ctx.fillStyle = "#000";
         ctx.fillRect(0, 0, constants.width, constants.height);
 
@@ -65,22 +94,5 @@ export class Engine {
                 }
             }
         }
-
-        for (let enemy of this.enemies) {
-            enemy.render(ctx);
-        }
-    }
-    update() {
-        let timeNow = performance.now();
-        let deltaTime = (timeNow - this.previousTime) / 1000;
-
-
-        this.previousTime = timeNow;
-    }
-    mousePressed(e) {
-
-    }
-    keyPressed(e) {
-
     }
 }
