@@ -32,9 +32,7 @@ export class Engine {
         this.shields = [];
         this.previousTime = performance.now();
 
-        let enemy = new Enemy();
-        enemy.velocity = new Vector(10, 10);
-        this.enemies.push(enemy);
+        this.enemyTimer = 0;
 
 
         this.money = 0;
@@ -53,6 +51,13 @@ export class Engine {
     update() {
         let timeNow = performance.now();
         let deltaTime = (timeNow - this.previousTime) / 1000;
+        this.enemyTimer += deltaTime;
+
+        if (this.enemyTimer > 0.5) {
+            let e = new Enemy(Math.floor(Math.random() * 3));
+            this.enemies.push(e);
+            this.enemyTimer = 0;
+        }
 
         for (let enemy of this.enemies) {
             enemy.update(deltaTime);
