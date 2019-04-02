@@ -23,6 +23,7 @@ export class Engine {
 
         this.render = this.render.bind(this);
         this.update = this.update.bind(this);
+        this.startWave = this.startWave.bind(this);
         requestAnimationFrame(this.render);
         setInterval(this.update, 1 / 100);
 
@@ -34,9 +35,20 @@ export class Engine {
 
         this.enemyTimer = 0;
 
+        this.wave = 1;
+        this.enemiesLeftToSpawn = 0;
+
 
         this.money = 0;
         this.lives = 100;
+
+        let startWaveBtn = document.getElementById('startWaveButton');
+        startWaveBtn.onclick = this.startWave;
+
+    }
+    startWave() {
+        this.enemiesLeftToSpawn = this.wave * 2 + 10;
+        this.wave++;
     }
     render() {
         let ctx = this.ctx;
@@ -53,10 +65,11 @@ export class Engine {
         let deltaTime = (timeNow - this.previousTime) / 1000;
         this.enemyTimer += deltaTime;
 
-        if (this.enemyTimer > 0.5) {
+        if (this.enemyTimer > 1 && this.enemiesLeftToSpawn > 0) {
             let e = new Enemy(Math.floor(Math.random() * 3));
             this.enemies.push(e);
             this.enemyTimer = 0;
+            this.enemiesLeftToSpawn--;
         }
 
         for (let enemy of this.enemies) {
