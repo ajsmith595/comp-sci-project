@@ -34,6 +34,7 @@ export class Engine {
         this.previousTime = performance.now();
 
         this.enemyTimer = 0;
+        this.enemyInterval = 1;
 
         this.wave = 0;
         this.enemiesLeftToSpawn = 0;
@@ -52,6 +53,7 @@ export class Engine {
             this.wave++;
             this.updateUI();
             Enemy.speed = constants.tileWidth * Math.pow(this.wave, 1 / 4);
+            this.enemyInterval = 1 / Math.pow(this.wave, 1 / 4);
         }
     }
     render() {
@@ -69,7 +71,7 @@ export class Engine {
         let deltaTime = (timeNow - this.previousTime) / 1000;
         this.enemyTimer += deltaTime;
 
-        if (this.enemyTimer > 1 && this.enemiesLeftToSpawn > 0) {
+        if (this.enemyTimer > this.enemyInterval && this.enemiesLeftToSpawn > 0) {
             let e = new Enemy(Math.floor(Math.random() * 3));
             this.enemies.push(e);
             this.enemyTimer = 0;
