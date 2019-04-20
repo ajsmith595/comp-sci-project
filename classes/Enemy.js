@@ -50,7 +50,7 @@ export class Enemy {
 
     }
 }
-Enemy.speed = constants.tileWidth * 3;
+Enemy.speed = constants.tileWidth;
 
 /*
 

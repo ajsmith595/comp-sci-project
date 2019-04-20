@@ -35,11 +35,11 @@ export class Engine {
 
         this.enemyTimer = 0;
 
-        this.wave = 1;
+        this.wave = 0;
         this.enemiesLeftToSpawn = 0;
 
 
-        this.money = 0;
+        this.money = 100;
         this.lives = 100;
 
         let startWaveBtn = document.getElementById('startWaveButton');
@@ -47,8 +47,12 @@ export class Engine {
 
     }
     startWave() {
-        this.enemiesLeftToSpawn = this.wave * 2 + 10;
-        this.wave++;
+        if (this.enemies.length == 0 && this.enemiesLeftToSpawn <= 0) {
+            this.enemiesLeftToSpawn = this.wave * 2 + 10;
+            this.wave++;
+            this.updateUI();
+            Enemy.speed = constants.tileWidth * Math.pow(this.wave, 1 / 4);
+        }
     }
     render() {
         let ctx = this.ctx;
@@ -74,8 +78,14 @@ export class Engine {
 
         for (let enemy of this.enemies) {
             enemy.update(deltaTime);
+            if (enemy.position.x < 0) {
+                this.lives--;
+                this.enemies = this.enemies.filter(e => e != enemy);
+                this.updateUI();
+            }
+            if (enemy.health <= 0)
+                this.enemies = this.enemies.filter(e => e != enemy);
         }
-
         this.previousTime = timeNow;
     }
     mousePressed(e) {
@@ -83,6 +93,12 @@ export class Engine {
     }
     keyPressed(e) {
 
+    }
+
+    updateUI() {
+        document.getElementById('moneyText').innerHTML = "&pound;" + this.money;
+        document.getElementById('livesText').innerHTML = this.lives;
+        document.getElementById('wavesText').innerHTML = this.wave;
     }
 
     renderMap() {

@@ -7,7 +7,7 @@ export class AimingTower {
         this.shoot = false;
         this.enemies = enemies;
     }
-    render() {
+    render(ctx) {
 
     }
     update() {
