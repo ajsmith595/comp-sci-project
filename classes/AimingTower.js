@@ -48,7 +48,7 @@ export class AimingTower {
         if (target == null)
             this.shoot = false;
         else {
-            this.rotation = (target.position.copy().add(this.position.copy().multiply(-1))).angle;
+            this.rotation = (target.position.copy().add(this.position.copy().multiply(-1))).angle + Math.PI / 2;
             this.shoot = true;
         }
     }
