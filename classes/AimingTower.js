@@ -8,7 +8,13 @@ export class AimingTower {
         this.enemies = enemies;
     }
     render(ctx) {
-
+        ctx.save();
+        ctx.translate(this.position.x, this.position.y);
+        ctx.rotate(this.rotation);
+        ctx.fillStyle = this.shoot ? "#0f0" : "#f00";
+        ctx.fillRect(-10, -10, 20, 20);
+        ctx.fillRect(-5, -20, 10, 20);
+        ctx.restore();
     }
     update() {
         let target = null;
@@ -19,21 +25,31 @@ export class AimingTower {
             if (distanceFromVector.magnitude > this.range)
                 continue;
 
-            switch (this.enemyTargetingMode) {
-                case 0:
-                    if (target.currentTargetIndex < enemy.currentTargetIndex) {
-                        target = enemy;
-                    }
-                    break;
-                case 1:
-                    if (target.health < enemy.health) {
-                        target = enemy;
-                    }
-                    break;
-                default:
-                    console.warn("Invalid enemy targeting mode detected");
-                    break;
+            if (target == null)
+                target = enemy;
+            else {
+                switch (this.enemyTargetingMode) {
+                    case 0:
+                        if (target.currentTargetIndex < enemy.currentTargetIndex) {
+                            target = enemy;
+                        }
+                        break;
+                    case 1:
+                        if (target.health < enemy.health) {
+                            target = enemy;
+                        }
+                        break;
+                    default:
+                        console.warn("Invalid enemy targeting mode detected");
+                        break;
+                }
             }
+        }
+        if (target == null)
+            this.shoot = false;
+        else {
+            this.rotation = (target.position.copy().add(this.position.copy().multiply(-1))).angle;
+            this.shoot = true;
         }
     }
 }
