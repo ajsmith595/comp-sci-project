@@ -1,7 +1,7 @@
 import constants from './constants.js';
 import { Vector } from './Vector.js';
 import { Enemy } from './Enemy.js';
-import { AimingTower } from './AimingTower.js';
+import { LaserTower } from './LaserTower.js';
 export class Engine {
     constructor() {
         let canvas = document.createElement('CANVAS'); // Create the canvas
@@ -44,10 +44,12 @@ export class Engine {
         this.money = 100;
         this.lives = 100;
 
+        this.timeScale = 1;
+
         let startWaveBtn = document.getElementById('startWaveButton');
         startWaveBtn.onclick = this.startWave;
 
-        let tower = new AimingTower(new Vector(constants.tileWidth * (5 - 1 / 2), constants.tileWidth * (6 - 1 / 2)), constants.tileWidth * 5, this.enemies);
+        let tower = new LaserTower(new Vector(constants.tileWidth * (5 - 1 / 2), constants.tileWidth * (6 - 1 / 2)), constants.tileWidth * 5, this.enemies);
         this.towers.push(tower);
 
     }
@@ -76,6 +78,8 @@ export class Engine {
     update() {
         let timeNow = performance.now();
         let deltaTime = (timeNow - this.previousTime) / 1000;
+        deltaTime *= this.timeScale;
+
         this.enemyTimer += deltaTime;
 
         if (this.enemyTimer > this.enemyInterval && this.enemiesLeftToSpawn > 0) {
