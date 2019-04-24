@@ -17,11 +17,11 @@ export class LaserTower extends AimingTower {
         ctx.fill();
         ctx.stroke();
 
-        // if (this.target != null) {
-            //     let dist = this.position.copy().add(this.target.position.copy().multiply(-1)).magnitude;
-            //     ctx.fillStyle = "#f00";
-            //     ctx.fillRect(-1, -dist - 5, 2, dist);
-            // }
+        if (this.target != null) {
+            let dist = this.position.copy().add(this.target.position.copy().multiply(-1)).magnitude;
+            ctx.fillStyle = "#f00";
+            ctx.fillRect(-1, -dist - 5, 2, dist);
+        }
         ctx.restore();
     }
     update() {
