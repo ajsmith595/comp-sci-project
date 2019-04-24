@@ -53,10 +53,10 @@ export class AimingTower {
             this.shoot = true;
         }
         this.target = target;
-        if (this.target) {
-            if (this.target.health <= 0 || this.target.position.x < 0) {
-                this.target = null;
-            }
-        }
+        // if (this.target) {
+        //     if (this.target.health <= 0 || this.target.position.x < 0) {
+        //         this.target = null;
+        //     }
+        // }
     }
 }
