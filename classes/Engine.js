@@ -44,7 +44,7 @@ export class Engine {
         this.money = 100;
         this.lives = 100;
 
-        this.timeScale = 1;
+        this.timeScale = 10;
 
         let startWaveBtn = document.getElementById('startWaveButton');
         startWaveBtn.onclick = this.startWave;
@@ -78,6 +78,7 @@ export class Engine {
     update() {
         let timeNow = performance.now();
         let deltaTime = (timeNow - this.previousTime) / 1000;
+        deltaTime = Math.min(deltaTime, 1 / 15);
         deltaTime *= this.timeScale;
 
         this.enemyTimer += deltaTime;
@@ -93,11 +94,11 @@ export class Engine {
             enemy.update(deltaTime);
             if (enemy.position.x < 0) {
                 this.lives--;
-                this.enemies = this.enemies.filter(e => e != enemy);
+                removeElement(this.enemies, enemy);
                 this.updateUI();
             }
             if (enemy.health <= 0)
-                this.enemies = this.enemies.filter(e => e != enemy);
+                removeElement(this.enemies, enemy);
         }
 
         for (let tower of this.towers) {
@@ -144,6 +145,15 @@ export class Engine {
                     ctx.fillRect(i * constants.tileWidth, j * constants.tileWidth, constants.tileWidth, constants.tileWidth);
                 }
             }
+        }
+    }
+}
+
+function removeElement(array, item) {
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] == item) {
+            array.splice(i, 1);
+            break;
         }
     }
 }

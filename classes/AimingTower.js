@@ -25,7 +25,6 @@ export class AimingTower {
 
             if (distanceFromVector.magnitude > this.range)
                 continue;
-
             if (target == null)
                 target = enemy;
             else {
