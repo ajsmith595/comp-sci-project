@@ -2,8 +2,8 @@ import { AimingTower } from './AimingTower.js';
 import constants from './constants.js';
 
 export class LaserTower extends AimingTower {
-    constructor(position, range, enemies, enemyTargetingMode = 0) {
-        super(position, range, enemies, enemyTargetingMode);
+    constructor(position, range, enemies, dps = 100, enemyTargetingMode = 0) {
+        super(position, range, enemies, dps, enemyTargetingMode);
     }
     render(ctx) {
         super.render(ctx);

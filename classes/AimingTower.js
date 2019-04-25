@@ -1,7 +1,7 @@
 import constants from './constants.js';
 
 export class AimingTower {
-    constructor(position, range, enemies, enemyTargetingMode = 0) {
+    constructor(position, range, enemies, dps = 100, enemyTargetingMode = 0) {
         this.rotation = 0;
         this.position = position;
         this.range = range;
@@ -9,6 +9,7 @@ export class AimingTower {
         this.shoot = false;
         this.enemies = enemies;
         this.target = null;
+        this.dps = dps;
     }
     render(ctx) {
         ctx.save();

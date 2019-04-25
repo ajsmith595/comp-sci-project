@@ -44,7 +44,7 @@ export class Engine {
         this.money = 100;
         this.lives = 100;
 
-        this.timeScale = 10;
+        this.timeScale = 1;
 
         let startWaveBtn = document.getElementById('startWaveButton');
         startWaveBtn.onclick = this.startWave;
@@ -103,6 +103,11 @@ export class Engine {
 
         for (let tower of this.towers) {
             tower.update(deltaTime);
+            if (tower instanceof LaserTower) {
+                if (tower.target && tower.shoot) {
+                    tower.target.health -= deltaTime * tower.dps;
+                }
+            }
         }
         this.previousTime = timeNow;
     }
