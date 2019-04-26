@@ -116,6 +116,20 @@ export class Engine {
         }
         for (let projectile of this.projectiles) {
             projectile.update(deltaTime);
+            if (projectile.position.x < 0 || projectile.position.y < 0 || projectile.position.x > constants.width || projectile.position.y > constants.height) {
+                removeElement(this.projectiles, projectile);
+            }
+            else {
+                let minDistance = constants.tileWidth / 2 + constants.tileWidth / 8;
+                for (let enemy of this.enemies) {
+                    let projectileToEnemyVector = enemy.position.copy().add(projectile.position.copy().multiply(-1));
+                    if (projectileToEnemyVector.magnitude <= minDistance) {
+                        enemy.health -= projectile.damage;
+                        removeElement(this.projectiles, projectile);
+                        break;
+                    }
+                }
+            }
         }
         this.previousTime = timeNow;
     }
