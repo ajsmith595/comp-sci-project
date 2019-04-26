@@ -2,6 +2,8 @@ import constants from './constants.js';
 import { Vector } from './Vector.js';
 import { Enemy } from './Enemy.js';
 import { LaserTower } from './LaserTower.js';
+import { ProjectileTower } from './ProjectileTower.js';
+import { Projectile } from './Projectile.js';
 export class Engine {
     constructor() {
         let canvas = document.createElement('CANVAS'); // Create the canvas
@@ -49,7 +51,7 @@ export class Engine {
         let startWaveBtn = document.getElementById('startWaveButton');
         startWaveBtn.onclick = this.startWave;
 
-        let tower = new LaserTower(new Vector(constants.tileWidth * (5 - 1 / 2), constants.tileWidth * (6 - 1 / 2)), constants.tileWidth * 5, this.enemies);
+        let tower = new ProjectileTower(new Vector(constants.tileWidth * (5 - 1 / 2), constants.tileWidth * (6 - 1 / 2)), constants.tileWidth * 5, this.enemies, this.projectiles);
         this.towers.push(tower);
 
     }
@@ -71,6 +73,9 @@ export class Engine {
         }
         for (let tower of this.towers) {
             tower.render(ctx);
+        }
+        for (let projectile of this.projectiles) {
+            projectile.render(ctx);
         }
 
         requestAnimationFrame(this.render);
@@ -108,6 +113,9 @@ export class Engine {
                     tower.target.health -= deltaTime * tower.dps;
                 }
             }
+        }
+        for (let projectile of this.projectiles) {
+            projectile.update(deltaTime);
         }
         this.previousTime = timeNow;
     }
