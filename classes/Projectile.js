@@ -13,7 +13,7 @@ export class Projectile {
         ctx.arc(this.position.x, this.position.y, constants.tileWidth / 8, 0, 2 * Math.PI);
         ctx.closePath();
         ctx.fillStyle = "#0f0";
-        ctx.strokeStyle = "#fff";
+        ctx.strokeStyle = "#000";
         ctx.fill();
         ctx.stroke();
     }
