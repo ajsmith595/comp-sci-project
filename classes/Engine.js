@@ -37,7 +37,7 @@ export class Engine {
         this.enemyTimer = 0;
         this.enemyInterval = 1;
 
-        this.wave = 0;
+        this.wave = 50;
         this.enemiesLeftToSpawn = 0;
 
 

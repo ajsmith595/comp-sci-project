@@ -6,6 +6,7 @@ export class Enemy {
         let tileX = 3 + tilePos;
         this.position = new Vector(constants.tileWidth * (tileX - 0.5), 0);
         this.health = 100;
+        this.maxHealth = this.health;
     }
 
     update(dt) {
@@ -47,7 +48,16 @@ export class Enemy {
         ctx.fillStyle = "#f00";
         ctx.fill();
 
-
+        // if (this.maxHealth > this.health) {
+            ctx.fillStyle = "#0f0";
+            ctx.strokeStyle = "#000";
+            ctx.beginPath();
+            let width = constants.tileWidth * (this.health / this.maxHealth);
+            ctx.rect(this.position.x - width / 2, this.position.y - constants.tileWidth / 2, width, 5);
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        // }
     }
 }
 Enemy.speed = constants.tileWidth;
