@@ -48,7 +48,7 @@ export class Enemy {
         ctx.fillStyle = "#f00";
         ctx.fill();
 
-        // if (this.maxHealth > this.health) {
+        if (this.maxHealth > this.health) {
             ctx.fillStyle = "#0f0";
             ctx.strokeStyle = "#000";
             ctx.beginPath();
@@ -57,7 +57,7 @@ export class Enemy {
             ctx.closePath();
             ctx.fill();
             ctx.stroke();
-        // }
+        }
     }
 }
 Enemy.speed = constants.tileWidth;
