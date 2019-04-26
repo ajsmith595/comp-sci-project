@@ -41,7 +41,7 @@ export class ProjectileTower extends AimingTower {
     shootProjectile() {
         let velocityVector = Vector.Polar(constants.tileWidth * 10, this.rotation);
         let damagePerProjectile = (60 / this.fireRate) * this.dps;
-        let projectile = new Projectile(this.position, velocityVector, damagePerProjectile);
+        let projectile = new Projectile(this.position.copy(), velocityVector, damagePerProjectile);
         this.projectiles.push(projectile);
     }
 }
