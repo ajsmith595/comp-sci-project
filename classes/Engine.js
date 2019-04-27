@@ -4,6 +4,8 @@ import { Enemy } from './Enemy.js';
 import { LaserTower } from './LaserTower.js';
 import { ProjectileTower } from './ProjectileTower.js';
 import { Projectile } from './Projectile.js';
+import { Shield } from './Shield.js';
+
 export class Engine {
     constructor() {
         let canvas = document.createElement('CANVAS'); // Create the canvas
@@ -51,8 +53,11 @@ export class Engine {
         let startWaveBtn = document.getElementById('startWaveButton');
         startWaveBtn.onclick = this.startWave;
 
-        let tower = new ProjectileTower(new Vector(constants.tileWidth * (5 - 1 / 2), constants.tileWidth * (6 - 1 / 2)), constants.tileWidth * 5, this.enemies, this.projectiles);
-        this.towers.push(tower);
+        let projectileTower = new ProjectileTower(new Vector(constants.tileWidth * (5 + 1 / 2), constants.tileWidth * (5 + 1 / 2)), constants.tileWidth * 5, this.enemies, this.projectiles);
+        this.towers.push(projectileTower);
+
+        let laserTower = new LaserTower(new Vector(constants.tileWidth * (4 + 1 / 2), constants.tileWidth * (5 + 1 / 2)), constants.tileWidth * 5, this.enemies);
+        this.towers.push(laserTower);
 
     }
     startWave() {
@@ -77,6 +82,9 @@ export class Engine {
         for (let projectile of this.projectiles) {
             projectile.render(ctx);
         }
+        for (let shield of this.shields) {
+            shield.render(ctx);
+        }
 
         requestAnimationFrame(this.render);
     }
@@ -91,8 +99,17 @@ export class Engine {
         if (this.enemyTimer > this.enemyInterval && this.enemiesLeftToSpawn > 0) {
             let e = new Enemy(Math.floor(Math.random() * 3));
             this.enemies.push(e);
+            if (Math.random() < 0.05) {
+                let shield = new Shield(e.position, e);
+                e.shield = true;
+                this.shields.push(shield);
+            }
             this.enemyTimer = 0;
             this.enemiesLeftToSpawn--;
+        }
+
+        for (let shield of this.shields) {
+            shield.enemyBound.health = shield.enemyBound.maxHealth;
         }
 
         for (let enemy of this.enemies) {
@@ -110,7 +127,8 @@ export class Engine {
             tower.update(deltaTime);
             if (tower instanceof LaserTower) {
                 if (tower.target && tower.shoot) {
-                    tower.target.health -= deltaTime * tower.dps;
+                    if (!tower.target.shield)
+                        tower.target.health -= deltaTime * tower.dps;
                 }
             }
         }
@@ -124,7 +142,8 @@ export class Engine {
                 for (let enemy of this.enemies) {
                     let projectileToEnemyVector = enemy.position.copy().add(projectile.position.copy().multiply(-1));
                     if (projectileToEnemyVector.magnitude <= minDistance) {
-                        enemy.health -= projectile.damage;
+                        if (!enemy.shield)
+                            enemy.health -= projectile.damage;
                         removeElement(this.projectiles, projectile);
                         break;
                     }
