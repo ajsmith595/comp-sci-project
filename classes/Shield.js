@@ -43,6 +43,8 @@ function sctQuestion() {
     let value = Math.floor(Math.random() * (degreeNum != 90 ? 3 : 2));
     let sinCosTan = ['sin', 'cos', 'tan'][value];
     let answer = Math[sinCosTan](degreeNum * Math.PI / 180);
+    answer = Math.round(answer * 100000) / 100000;
+    answer = answer.toString();
     let question = `What is the value of ${sinCosTan}(${degreeNum})?`;
     return {
         question,

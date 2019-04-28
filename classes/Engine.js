@@ -43,7 +43,7 @@ export class Engine {
         this.enemyTimer = 0;
         this.enemyInterval = 1;
 
-        this.wave = 50;
+        this.wave = 0;
         this.enemiesLeftToSpawn = 0;
 
 
@@ -57,14 +57,26 @@ export class Engine {
         let answerQuestionBtn = document.getElementById('answerButton');
         answerQuestionBtn.onclick = this.answerQuestion;
 
-        let projectileTower = new ProjectileTower(new Vector(constants.tileWidth * (5 + 1 / 2), constants.tileWidth * (5 + 1 / 2)), constants.tileWidth * 5, this.enemies, this.projectiles);
-        this.towers.push(projectileTower);
+        this.towerToAdd = null;
 
-        let laserTower = new LaserTower(new Vector(constants.tileWidth * (4 + 1 / 2), constants.tileWidth * (5 + 1 / 2)), constants.tileWidth * 5, this.enemies);
-        this.towers.push(laserTower);
+        document.getElementById('laserTowerButton').onclick = () => {
+            this.towerToAdd = new LaserTower(Vector.Z, constants.tileWidth * 5, this.enemies);
+        }
+        document.getElementById('projectileTowerButton').onclick = () => {
+            this.towerToAdd = new ProjectileTower(Vector.Z, constants.tileWidth * 5, this.enemies, this.projectiles);
+        }
+
 
 
         document.onmousedown = this.mousePressed;
+        document.onmousemove = (e) => {
+            if (this.towerToAdd) {
+                let x = (Math.round(e.clientX / constants.tileWidth - 0.5) + 0.5) * constants.tileWidth;
+                let y = (Math.round(e.clientY / constants.tileWidth - 0.5) + 0.5) * constants.tileWidth;
+                let pos = new Vector(x, y);
+                this.towerToAdd.position.setTo(pos);
+            }
+        }
 
     }
     startWave() {
@@ -91,6 +103,9 @@ export class Engine {
         }
         for (let shield of this.shields) {
             shield.render(ctx);
+        }
+        if (this.towerToAdd) {
+            this.towerToAdd.render(ctx);
         }
 
         requestAnimationFrame(this.render);
@@ -119,11 +134,23 @@ export class Engine {
             enemy.update(deltaTime);
             if (enemy.position.x < 0) {
                 this.lives--;
+                if (enemy.shield) {
+                    for (let shield of this.shields) {
+                        if (shield.enemyBound == enemy) {
+                            removeElement(this.shields, shield);
+                            this.lives -= 10;
+                            break;
+                        }
+                    }
+                }
                 removeElement(this.enemies, enemy);
                 this.updateUI();
             }
-            if (enemy.health <= 0)
+            else if (enemy.health <= 0) {
+                this.money += 3;
+                this.updateUI();
                 removeElement(this.enemies, enemy);
+            }
         }
 
         for (let tower of this.towers) {
@@ -156,11 +183,25 @@ export class Engine {
         this.previousTime = timeNow;
     }
     mousePressed(e) {
-        if (e.button == 0) {
-            let mousePos = new Vector(e.clientX, e.clientY);
-            for (let shield of this.shields) {
-                if (shield.position.copy().add(mousePos.copy().multiply(-1)).magnitude < constants.tileWidth * 5 / 8) {
-                    this.selectShield(shield);
+        if (!this.towerToAdd) {
+            if (e.button == 0) {
+                let mousePos = new Vector(e.clientX, e.clientY);
+                for (let shield of this.shields) {
+                    if (shield.position.copy().add(mousePos.copy().multiply(-1)).magnitude < constants.tileWidth * 5 / 8) {
+                        this.selectShield(shield);
+                    }
+                }
+            }
+        }
+        else {
+            if (e.button == 0) {
+                let x = Math.floor(this.towerToAdd.position.x / constants.tileWidth);
+                let y = Math.floor(this.towerToAdd.position.y / constants.tileWidth);
+                if (constants.map[y] && constants.map[y][x] == "f") {
+                    this.towers.push(this.towerToAdd);
+                    this.towerToAdd = null;
+                    this.money -= 100;
+                    this.updateUI();
                 }
             }
         }
@@ -171,8 +212,11 @@ export class Engine {
 
     answerQuestion() {
         let answer = document.getElementById('answerInput').value;
+        document.getElementById('answerInput').value = "";
         document.getElementById('questionDiv').style.display = "none";
-        let actualAnswer = String(eval(answer));
+        let val = eval(answer.replace("sqrt", "Math.sqrt"));
+        val = Math.round(val * 100000) / 100000;
+        let actualAnswer = String(val);
         if (!this.shieldSelected.checkAnswer(actualAnswer)) {
             this.lives -= 10;
         }
@@ -193,6 +237,14 @@ export class Engine {
         document.getElementById('moneyText').innerHTML = "&pound;" + this.money;
         document.getElementById('livesText').innerHTML = this.lives;
         document.getElementById('wavesText').innerHTML = this.wave;
+        if (this.money < 100) {
+            document.getElementById('laserTowerButton').disabled = true;
+            document.getElementById('projectileTowerButton').disabled = true;
+        }
+        else {
+            document.getElementById('laserTowerButton').disabled = false;
+            document.getElementById('projectileTowerButton').disabled = false;
+        }
     }
 
     renderMap() {
@@ -233,3 +285,4 @@ function removeElement(array, item) {
         }
     }
 }
+//  i love you
