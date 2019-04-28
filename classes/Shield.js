@@ -42,7 +42,7 @@ function sctQuestion() {
 
     let value = Math.floor(Math.random() * (degreeNum != 90 ? 3 : 2));
     let sinCosTan = ['sin', 'cos', 'tan'][value];
-    let answer = Math[sinCosTan](degreeNum);
+    let answer = Math[sinCosTan](degreeNum * Math.PI / 180);
     let question = `What is the value of ${sinCosTan}(${degreeNum})?`;
     return {
         question,
@@ -52,9 +52,9 @@ function sctQuestion() {
 
 function pythagQuestion() {
     let possibles = [
-        [3, 4, 5],
-        [5, 12, 13],
-        [8, 15, 17]
+        ["3", "4", "5"],
+        ["5", "12", "13"],
+        ["8", "15", "17"]
     ]; // Pythagorean triples
 
     let triple = possibles[Math.floor(Math.random() * possibles.length)];

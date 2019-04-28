@@ -29,6 +29,8 @@ export class Engine {
         this.render = this.render.bind(this);
         this.update = this.update.bind(this);
         this.startWave = this.startWave.bind(this);
+        this.mousePressed = this.mousePressed.bind(this);
+        this.answerQuestion = this.answerQuestion.bind(this);
         requestAnimationFrame(this.render);
         setInterval(this.update, 1 / 100);
 
@@ -52,12 +54,17 @@ export class Engine {
 
         let startWaveBtn = document.getElementById('startWaveButton');
         startWaveBtn.onclick = this.startWave;
+        let answerQuestionBtn = document.getElementById('answerButton');
+        answerQuestionBtn.onclick = this.answerQuestion;
 
         let projectileTower = new ProjectileTower(new Vector(constants.tileWidth * (5 + 1 / 2), constants.tileWidth * (5 + 1 / 2)), constants.tileWidth * 5, this.enemies, this.projectiles);
         this.towers.push(projectileTower);
 
         let laserTower = new LaserTower(new Vector(constants.tileWidth * (4 + 1 / 2), constants.tileWidth * (5 + 1 / 2)), constants.tileWidth * 5, this.enemies);
         this.towers.push(laserTower);
+
+
+        document.onmousedown = this.mousePressed;
 
     }
     startWave() {
@@ -108,10 +115,6 @@ export class Engine {
             this.enemiesLeftToSpawn--;
         }
 
-        for (let shield of this.shields) {
-            shield.enemyBound.health = shield.enemyBound.maxHealth;
-        }
-
         for (let enemy of this.enemies) {
             enemy.update(deltaTime);
             if (enemy.position.x < 0) {
@@ -153,12 +156,39 @@ export class Engine {
         this.previousTime = timeNow;
     }
     mousePressed(e) {
-
+        if (e.button == 0) {
+            let mousePos = new Vector(e.clientX, e.clientY);
+            for (let shield of this.shields) {
+                if (shield.position.copy().add(mousePos.copy().multiply(-1)).magnitude < constants.tileWidth * 5 / 8) {
+                    this.selectShield(shield);
+                }
+            }
+        }
     }
     keyPressed(e) {
 
     }
 
+    answerQuestion() {
+        let answer = document.getElementById('answerInput').value;
+        document.getElementById('questionDiv').style.display = "none";
+        let actualAnswer = String(eval(answer));
+        if (!this.shieldSelected.checkAnswer(actualAnswer)) {
+            this.lives -= 10;
+        }
+
+        this.shieldSelected.enemyBound.shield = null;
+        removeElement(this.shields, this.shieldSelected);
+        this.shieldSelected = null;
+
+        this.updateUI();
+    }
+
+    selectShield(shield) {
+        document.getElementById('questionDiv').style.display = "block";
+        document.getElementById('questionText').innerHTML = shield.question;
+        this.shieldSelected = shield;
+    }
     updateUI() {
         document.getElementById('moneyText').innerHTML = "&pound;" + this.money;
         document.getElementById('livesText').innerHTML = this.lives;
