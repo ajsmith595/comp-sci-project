@@ -33,6 +33,8 @@ export class ProjectileTower extends AimingTower {
 
         this.shootTime += dt;
         if (this.shootTime > 60 / this.fireRate && this.shoot) {
+            // If the time since the last shot is greater than the 
+            // shooting interval, and it has a target to aim at, shoot!
             this.shootTime = 0;
             this.shootProjectile();
         }
@@ -40,8 +42,10 @@ export class ProjectileTower extends AimingTower {
 
     shootProjectile() {
         let velocityVector = Vector.Polar(constants.tileWidth * 10, this.rotation - Math.PI / 2);
+        // A velocity vector parallel to the direction of the turret itself
         let damagePerProjectile = (60 / this.fireRate) * this.dps;
         let projectile = new Projectile(this.position.copy(), velocityVector, damagePerProjectile);
+        // Create a new projectile and add it to the projectiles array in Engine.
         this.projectiles.push(projectile);
     }
 }

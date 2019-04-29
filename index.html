@@ -6,11 +6,13 @@
 </head>
 
 <body>
+    <!-- For the canvas to be inserted -->
     <div id="game" class="sameline">
     </div>
     <div id="menu" class="sameline">
         <h1>Menu</h1>
         <table>
+            <!-- A table to show every value -->
             <tr>
                 <td>Money</td>
                 <td id="moneyText">&pound;100</td>
@@ -24,43 +26,20 @@
                 <td id="wavesText">1</td>
             </tr>
         </table>
+        <!-- Buttons for starting waves, placing towers -->
         <button id="startWaveButton">START WAVE</button>
         <button id="laserTowerButton">LASER TOWER</button>
         <button id="projectileTowerButton">PROJECTILE TOWER</button>
+
+        <!-- The div for every question - hidden by default -->
         <div id="questionDiv" style="display: none;">
-            <p id="questionText">What is the value of sin 30?</p>
+            <p id="questionText"></p>
             <input id="answerInput" type="text" />
             <button id="answerButton">Answer</button>
         </div>
+
     </div>
     <script type="module" src="main.js"></script>
 </body>
 
 </html>
-
-
-
-<!--<div id="game">-->
-<!--        </div>-->
-<!--        <div id="menu">-->
-<!--            <div id="menubg" class="menu-absolute"></div>-->
-<!--            <div class="menu-absolute">-->
-<!--                <h1>Menu</h1>-->
-<!--                <table>-->
-<!--                    <tr>-->
-<!--                        <td>Money</td>-->
-<!--                        <td class="right">100</td>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <td>Lives</td>-->
-<!--                        <td class="right">100</td>-->
-<!--                    </tr>-->
-<!--                    <tr>-->
-<!--                        <td>Round</td>-->
-<!--                        <td class="right">1</td>-->
-<!--                    </tr>-->
-<!--                </table>-->
-
-<!--                <button class="menubtn">START ROUND</button>-->
-<!--            </div>-->
-<!--        </div>-->
